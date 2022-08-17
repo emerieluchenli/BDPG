@@ -176,7 +176,8 @@ class Trainer(BaseTrainer):
 
             env.render()
 
-            if dones[0]:
+#             if dones[0]:
+            if info[0]['real_done']:
                 observation_stack[0] *= 0
             observation_stack = self.__observation_update(observation, observation_stack)
         env.close()
@@ -197,12 +198,14 @@ class Trainer(BaseTrainer):
             mb_neglogpac.append(neglogpac.copy())
 
             # take action
-            observation, rewards0, rewards, dones, info = self.env.step(actions)
+            observation, rewards0, rewards, dones, infos = self.env.step(actions)
 
             self.dones = dones
-            for n, (done, rew) in enumerate(zip(dones, rewards0)):
+#             for n, (done, rew) in enumerate(zip(dones, rewards0)):
+            for n, (info, rew) in enumerate(zip(infos, rewards0)):
                 self.sum_rew_cur_epi[n] += rew
-                if done:
+#                 if done:
+                if info['real_done']:
                     self.observation_stack[n] *= 0
                     self.returns_all_env_cur_epoch.append(self.sum_rew_cur_epi[n])
                     self.sum_rew_cur_epi[n] = 0.
