@@ -159,7 +159,7 @@ class Trainer(BaseTrainer):
     def test(self, total_timesteps, env):
         self.init_model()
 
-        if self.ig_rms is not None:
+        if self.model.is_exploring and self.ig_rms is not None:
             self.ig_rms._set_mean_var_count()
         if env.ret_rms is not None:
             env.ret_rms._set_mean_var_count()
